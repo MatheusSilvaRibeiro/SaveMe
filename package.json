@@ -1,0 +1,16 @@
+{
+  "name": "saveme-games",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Comparador de preços de jogos digitais",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "install:all": "npm install"
+  },
+  "keywords": ["games", "price-comparison"],
+  "author": "Matheus Silva, Tauane Carolina, Nicolas Noronha",
+  "license": "MIT"
+}

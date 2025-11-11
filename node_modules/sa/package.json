@@ -1,0 +1,24 @@
+{
+  "type": "module",
+  "name": "sa",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "echo Tests coming soon",
+    "lint": "echo ESLint coming soon"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "bcrypt": "^5.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
