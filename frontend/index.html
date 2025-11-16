@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaveMe Games - Compare Preços de Games</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  
+  <style>
+    /*
+      ====================================================
+      ESTILOS DA PÁGINA PÚBLICA - SAVEME GAMES
+      ====================================================
+    */
+    
+    /* Fundo da página */
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+    
+    /* ====================================================
+       NAVBAR
+       ==================================================== */
+    
+    .navbar {
+      background: rgba(0, 0, 0, 0.8) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    
+    .navbar-brand {
+      font-size: 1.5em;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    
+    /* ====================================================
+       SEÇÃO HERO (Topo com busca)
+       ==================================================== */
+    
+    .hero-section {
+      padding: 80px 0;
+      text-align: center;
+      color: white;
+    }
+    
+    .hero-title {
+      font-size: 3em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero-subtitle {
+      font-size: 1.3em;
+      margin-bottom: 40px;
+      opacity: 0.95;
+    }
+    
+    /* Campo de busca no hero */
+    .search-container {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .search-input {
+      border: 2px solid #e0e0e0;
+      padding: 12px 20px;
+      font-size: 1.1em;
+      border-radius: 8px;
+    }
+    
+    .search-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .btn-search {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.1em;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: transform 0.2s ease;
+    }
+    
+    .btn-search:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* ====================================================
+       SEÇÃO RESULTADOS
+       ==================================================== */
+    
+    .results-section {
+      padding: 40px 0;
+      background: white;
+      margin-top: 40px;
+      border-radius: 12px 12px 0 0;
+    }
+    
+    /* ====================================================
+       CARD DO JOGO
+       ==================================================== */
+    
+    .jogo-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .jogo-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Header do card (com gradiente) */
+    .jogo-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+    }
+    
+    .jogo-titulo {
+      font-size: 1.8em;
+      font-weight: bold;
+      margin: 0;
+    }
+    
+    .jogo-desenvolvedora {
+      font-size: 1em;
+      opacity: 0.9;
+      margin: 5px 0 0 0;
+    }
+    
+    /* Body do card */
+    .jogo-body {
+      padding: 20px;
+    }
+    
+    .jogo-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .info-item {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .info-label {
+      font-size: 0.9em;
+      color: #999;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    
+    .info-value {
+      font-size: 1.1em;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .jogo-descricao {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #667eea;
+      line-height: 1.6;
+    }
+    
+    /* ====================================================
+       TABELA DE PREÇOS
+       ==================================================== */
+    
+    .precos-title {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    
+    .tabela-precos {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .tabela-precos thead {
+      background: #f8f9fa;
+      border-bottom: 2px solid #667eea;
+    }
+    
+    .tabela-precos thead th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .tabela-precos tbody tr {
+      border-bottom: 1px solid #e0e0e0;
+      transition: background-color 0.2s ease;
+    }
+    
+    .tabela-precos tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .tabela-precos tbody td {
+      padding: 12px;
+    }
+    
+    /* Plataforma */
+    .preco-plataforma {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    /* Preço normal */
+    .preco-valor {
+      font-size: 1.2em;
+      color: #666;
+      font-weight: 600;
+    }
+    
+    /* Preço mais barato (VERDE) */
+    .preco-menor {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+      display: inline-block;
+    }
+    
+    .badge-menor {
+      background: #28a745;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      margin-left: 10px;
+      font-weight: 600;
+    }
+    
+    /* ====================================================
+       MENSAGENS
+       ==================================================== */
+    
+    .message-box {
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    .message-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border-left: 4px solid #0c5460;
+    }
+    
+    .message-empty {
+      background: #fff3cd;
+      color: #856404;
+      border-left: 4px solid #856404;
+    }
+    
+    /* ====================================================
+       LOADING
+       ==================================================== */
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 20px;
+    }
+    
+    /* ====================================================
+       LINKS
+       ==================================================== */
+    
+    .admin-link {
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: opacity 0.2s ease;
+    }
+    
+    .admin-link:hover {
+      opacity: 0.8;
+    }
+    
+    /* ====================================================
+       RESPONSIVIDADE
+       ==================================================== */
+    
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2em;
+      }
+      
+      .hero-subtitle {
+        font-size: 1em;
+      }
+      
+      .jogo-info {
+        grid-template-columns: 1fr;
+      }
+      
+      .tabela-precos {
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====================================================
+       NAVBAR (Barra de navegação)
+       ==================================================== -->
+  <nav class="navbar navbar-dark">
+    <div class="container-fluid">
+      <span class="navbar-brand">
+        <i class="bi bi-controller"></i> SaveMe Games
+      </span>
+      
+      <div>
+        <!-- Link para admin -->
+        <a href="admin/jogos.html" class="admin-link me-3">
+          <i class="bi bi-lock"></i> Admin
+        </a>
+        
+        <!-- Link para cadastro -->
+        <a href="signup.html" class="btn btn-sm btn-outline-light">
+          <i class="bi bi-person-plus"></i> Cadastro
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====================================================
+       SEÇÃO HERO (Topo com busca)
+       ==================================================== -->
+  <div class="hero-section">
+    <div class="container">
+      <h1 class="hero-title">
+        <i class="bi bi-search"></i> SaveMe Games
+      </h1>
+      
+      <p class="hero-subtitle">
+        Encontre o melhor preço para seu jogo favorito!
+      </p>
+      
+      <!-- Caixa de busca -->
+      <div class="search-container">
+        <div class="row g-2">
+          <div class="col-md-9">
+            <input 
+              type="text" 
+              id="buscarJogo" 
+              class="form-control search-input" 
+              placeholder="Buscar um jogo... "
+              autocomplete="off"
+            >
+          </div>
+          
+          <div class="col-md-3">
+            <button id="btnBuscar" class="btn btn-search w-100 text-white"><i class="bi bi-search"></i> Buscar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       SEÇÃO RESULTADOS
+       ==================================================== -->
+  <div class="results-section">
+    <div class="container">
+      
+      <!-- Área onde aparecem os resultados -->
+      <div id="resultados">
+        <!-- Mensagem inicial -->
+        <div class="message-box message-info">
+          <i class="bi bi-info-circle"></i> 
+          Digite o nome de um jogo acima e clique em buscar para ver os preços!
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- ====================================================
+       RODAPÉ
+       ==================================================== -->
+  <footer class="bg-dark text-white text-center py-4">
+    <p>&copy; 2025 SaveMe Games. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- ====================================================
+       SCRIPTS
+       ==================================================== -->
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- API -->
+  <script src="js/api.js"></script>
+  
+  <!-- Lógica da página pública -->
+  <script src="js/public.js"></script>
+
+</body>
+</html>

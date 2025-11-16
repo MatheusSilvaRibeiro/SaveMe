@@ -1,0 +1,205 @@
+/*
+  ====================================================
+  ESTILOS CUSTOMIZADOS DO SAVEME GAMES
+  ====================================================
+  
+  CSS = Define cores, tamanhos, fonts, posições, etc
+  
+  Você coloca aqui tudo que não está no Bootstrap
+  Ou que quer MODIFICAR do Bootstrap
+*/
+
+/* 
+  ====================================================
+  VARIÁVEIS (Cores que usamos em todo o site)
+  ====================================================
+  
+  Assim se quisermos mudar a cor, só mudamos aqui!
+  E muda em TUDO que usa essa variável
+*/
+:root {
+  --cor-primaria: #007bff;    /* Azul */
+  --cor-secundaria: #28a745;  /* Verde (mais barato) */
+  --cor-alerta: #dc3545;      /* Vermelho (mais caro) */
+  --cor-fundo: #f8f9fa;       /* Cinza bem claro */
+}
+
+/* 
+  ====================================================
+  BODY = Estilo geral da página
+  ====================================================
+*/
+body {
+  /* Font = Tipo de letra */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+  /* Cor do fundo */
+  background-color: var(--cor-fundo);
+  
+  /* Cor do texto */
+  color: #333;
+}
+
+/* 
+  ====================================================
+  CARDS (cartões de jogos)
+  ====================================================
+  
+  .card-jogo = Classe customizada para os cards dos jogos
+*/
+.card-jogo {
+  /* Sombra (efeito 3D) */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  /* Borda arredondada */
+  border-radius: 12px;
+  
+  /* Transição suave quando passa o mouse */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  /* Margem entre os cards */
+  margin-bottom: 20px;
+}
+
+/* 
+  Quando passa o mouse sobre o card, ele cresce um pouco
+  :hover = Quando o mouse está sobre o elemento
+*/
+.card-jogo:hover {
+  /* Transform = Transformação */
+  transform: translateY(-5px);
+  
+  /* Sombra maior quando faz hover */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 
+  ====================================================
+  TABELA DE PREÇOS (dentro de cada card)
+  ====================================================
+*/
+.tabela-precos {
+  /* Sem margem inferior */
+  margin-bottom: 0;
+}
+
+/* Linhas da tabela */
+.tabela-precos tbody tr {
+  /* Transição suave */
+  transition: background-color 0.2s ease;
+}
+
+/* Quando passa o mouse sobre uma linha */
+.tabela-precos tbody tr:hover {
+  /* Fundo fica um pouco mais escuro */
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* 
+  ====================================================
+  PREÇO MAIS BARATO (verde com estrela)
+  ====================================================
+  
+  .preco-menor = Classe que usamos no HTML para marcar o menor preço
+*/
+.preco-menor {
+  /* Cor verde */
+  color: var(--cor-secundaria);
+  
+  /* Font weight = Espessura da letra */
+  font-weight: bold;
+  
+  /* Size = Tamanho */
+  font-size: 1.1em;
+}
+
+/* 
+  ====================================================
+  BOTÕES
+  ====================================================
+*/
+
+/* Botão primário (buscar) */
+.btn-primary {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+}
+
+/* Quando passa o mouse no botão */
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Botão de editar (edit) */
+.btn-edit {
+  /* Botão pequeno */
+  padding: 4px 8px;
+  font-size: 0.9em;
+}
+
+/* Botão de deletar (trash) */
+.btn-delete {
+  /* Igual ao edit, mas vermelho */
+  padding: 4px 8px;
+  font-size: 0.9em;
+  color: var(--cor-alerta);
+}
+
+/* 
+  ====================================================
+  FOOTER (rodapé)
+  ====================================================
+*/
+footer {
+  /* Margem top grande */
+  margin-top: 50px;
+  
+  /* Borda superior */
+  border-top: 1px solid #ddd;
+}
+
+/* 
+  ====================================================
+  RESPONSIVIDADE (Adaptar para mobile)
+  ====================================================
+  
+  @media = Se a tela for menor que X pixels
+  
+  Assim o site funciona bem em celular, tablet e desktop
+*/
+
+/* Se a tela tiver menos de 768px (tablet/mobile) */
+@media (max-width: 768px) {
+  
+  /* Reduz tamanho do título */
+  h1 {
+    font-size: 1.5em;
+  }
+  
+  /* Input e botão ficam em linha separada */
+  .col-md-8,
+  .col-md-4 {
+    margin-bottom: 10px;
+  }
+  
+  /* Tabela fica menor */
+  .table {
+    font-size: 0.9em;
+  }
+}
+
+/* Se a tela tiver menos de 480px (celular pequeno) */
+@media (max-width: 480px) {
+  
+  /* Título ainda menor */
+  h1 {
+    font-size: 1.2em;
+  }
+  
+  /* Remove padding do container */
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

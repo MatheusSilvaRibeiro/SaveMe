@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Gerenciar Jogos - SaveMe Games</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  
+  <style>
+    /*
+      ====================================================
+      ESTILOS DA PÁGINA ADMIN DE JOGOS
+      ====================================================
+    */
+    
+    body {
+      background-color: #f8f9fa;
+    }
+    
+    /* Navbar */
+    .navbar {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Container principal */
+    .admin-container {
+      padding: 30px 0;
+    }
+    
+    /* Título da página */
+    .page-title {
+      border-bottom: 3px solid #007bff;
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+    
+    /* Card do formulário */
+    .form-card {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    
+    /* Tabela */
+    .table-responsive {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .table-jogos {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Hover na tabela */
+    .table-jogos tbody tr:hover {
+      background-color: rgba(0, 123, 255, 0.1);
+    }
+    
+    /* Botões */
+    .btn-acao {
+      padding: 4px 8px;
+      font-size: 0.85em;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====================================================
+       NAVBAR
+       ==================================================== -->
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">
+        <i class="bi bi-controller"></i> SaveMe Games - Admin
+      </span>
+      
+      <div>
+        <a href="../index.html" class="btn btn-outline-light btn-sm me-2">
+          <i class="bi bi-house"></i> Home
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====================================================
+       CONTAINER PRINCIPAL
+       ==================================================== -->
+  <div class="container admin-container">
+    
+    <!-- Título -->
+    <div class="row">
+      <div class="col-12">
+        <h1 class="page-title">
+          <i class="bi bi-controller"></i> Gerenciar Jogos
+        </h1>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         SEÇÃO 1: FORMULÁRIO
+         ==================================================== -->
+    <div class="row mb-4">
+      <div class="col-lg-6">
+        
+        <div class="card form-card">
+          
+          <!-- Header do card -->
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0" id="formTitulo">
+              <i class="bi bi-plus-circle"></i> Adicionar Novo Jogo
+            </h5>
+          </div>
+          
+          <!-- Body do card -->
+          <div class="card-body">
+            
+            <!-- Área de mensagens -->
+            <div id="mensagemForm"></div>
+            
+            <!-- Formulário -->
+            <form id="formJogo">
+              
+              <!-- Campo: Título -->
+              <div class="mb-3">
+                <label for="inputTitulo" class="form-label">
+                  Título *
+                </label>
+                <input 
+                  type="text" 
+                  id="inputTitulo" 
+                  class="form-control" 
+                  placeholder=""
+                  required
+                >
+              </div>
+              
+              <!-- Campo: Desenvolvedora -->
+              <div class="mb-3">
+                <label for="inputDesenvolvedora" class="form-label">
+                  Desenvolvedora *
+                </label>
+                <input 
+                  type="text" 
+                  id="inputDesenvolvedora" 
+                  class="form-control" 
+                  placeholder=""
+                  required
+                >
+              </div>
+              
+              <!-- Campo: Gênero -->
+              <div class="mb-3">
+                <label for="inputGenero" class="form-label">
+                  Gênero *
+                </label>
+                <input 
+                  type="text" 
+                  id="inputGenero" 
+                  class="form-control" 
+                  placeholder=""
+                  required
+                >
+              </div>
+              
+              <!-- Campo: Descrição -->
+              <div class="mb-3">
+                <label for="inputDescricao" class="form-label">
+                  Descrição *
+                </label>
+                <textarea 
+                  id="inputDescricao" 
+                  class="form-control" 
+                  placeholder="Descrição do jogo..."
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+              
+              <!-- Campo: Data de Lançamento -->
+              <div class="mb-3">
+                <label for="inputData" class="form-label">
+                  Data de Lançamento *
+                </label>
+                <input 
+                  type="date" 
+                  id="inputData" 
+                  class="form-control"
+                  required
+                >
+              </div>
+              
+              <!-- Campo oculto para ID (quando editando) -->
+              <input type="hidden" id="inputJogoId" value="">
+              
+              <!-- Botões -->
+              <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                <button 
+                  type="submit" 
+                  class="btn btn-primary"
+                  id="btnSalvar"
+                >
+                  <i class="bi bi-check-circle"></i> Salvar Jogo
+                </button>
+                
+                <button 
+                  type="button" 
+                  class="btn btn-secondary" 
+                  id="btnCancelar"
+                  style="display: none;"
+                >
+                  <i class="bi bi-x-circle"></i> Cancelar
+                </button>
+              </div>
+              
+            </form>
+            
+          </div>
+        </div>
+        
+      </div>
+      
+      <!-- Info box -->
+      <div class="col-lg-6">
+        
+        <div class="card">
+          <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+              <i class="bi bi-info-circle"></i> Informações
+            </h5>
+          </div>
+          
+          <div class="card-body">
+            <p><strong>Total de Jogos:</strong> <span id="totalJogos">0</span></p>
+            <p class="mb-0">
+              <small class="text-muted">
+                Use este formulário para adicionar novos jogos ao sistema. 
+                Preencha todos os campos e clique em "Salvar Jogo".
+              </small>
+            </p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- ====================================================
+         SEÇÃO 2: TABELA DE JOGOS
+         ==================================================== -->
+    <div class="row">
+      <div class="col-12">
+        
+        <h4 class="mb-3">
+          <i class="bi bi-table"></i> Jogos Cadastrados
+        </h4>
+        
+        <div id="areaTabela">
+          <div class="text-center py-4">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p class="mt-2">Carregando jogos...</p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- ====================================================
+       RODAPÉ
+       ==================================================== -->
+  <footer class="bg-dark text-white text-center py-4 mt-5">
+    <p>&copy; 2024 SaveMe Games. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- ====================================================
+       SCRIPTS
+       ==================================================== -->
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-jogos.js"></script>
+
+</body>
+</html>
