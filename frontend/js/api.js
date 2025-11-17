@@ -1,148 +1,100 @@
 const URL_BASE = 'http://localhost:3000/api';
 
-// ======================================================
 // Função genérica de requisições
-// ======================================================
 async function fazRequisicao(endpoint, metodo = 'GET', dados = null) {
   try {
-    const url = `${URL_BASE}${endpoint}`;
+    const url = `${URL_BASE}${endpoint}`;  // Monta a URL da API
     console.log(`📡 Requisição ${metodo}: ${url}`);
     
     const opcoes = {
-      method: metodo,
+      method: metodo,                     // Método HTTP (GET, POST...)
       headers: { 'Content-Type': 'application/json' }
     };
     
     if (dados) {
-      opcoes.body = JSON.stringify(dados);
+      opcoes.body = JSON.stringify(dados); // Envia dados no corpo, se existir
     }
     
-    const resposta = await fetch(url, opcoes);
+    const resposta = await fetch(url, opcoes); // Chama a API
     console.log(`📡 Status: ${resposta.status}`);
     
-    if (!resposta.ok) {
-      console.error(`Erro HTTP ${resposta.status}`);
-      throw new Error(`Erro ${resposta.status}: ${resposta.statusText}`);
-    }
-    
-    const dados_resposta = await resposta.json();
-    console.log('✅ Dados recebidos:', dados_resposta);
-    
-    return dados_resposta;
+    if (!resposta.ok) throw new Error(`Erro ${resposta.status}`);
+
+    return await resposta.json();           // Retorna os dados da API
   } catch (erro) {
     console.error('❌ Erro na requisição:', erro);
-    return null;
+    return null;                            // Em caso de erro, retorna null
   }
 }
 
-// ======================================================
 // JOGOS
-// ======================================================
 async function listarJogos() {
-  console.log('🔍 GET /jogos');
-  return await fazRequisicao('/jogos', 'GET');
+  return await fazRequisicao('/jogos', 'GET'); // Busca todos os jogos
 }
 
 async function buscarJogo(nome) {
-  console.log(`🔍 Buscando jogo: ${nome}`);
+  if (!nome || nome.trim() === "") return [];
 
-  if (!nome || nome.trim() === "") {
-    console.log("❌ Nome vazio, retornando lista vazia");
-    return [];
-  }
+  const resultado = await listarJogos();       // Filtra jogos pelo nome
+  if (!resultado || !resultado.jogos) return [];
 
-  try {
-    const resultado = await listarJogos();
-
-    if (!resultado || !resultado.jogos) {
-      console.log("Nenhum resultado encontrado.");
-      return [];
-    }
-
-    const filtrados = resultado.jogos.filter(jogo =>
-      jogo.titulo.toLowerCase().includes(nome.toLowerCase())
-    );
-
-    return filtrados;
-  } catch (erro) {
-    console.error("Erro ao buscar jogo:", erro);
-    return [];
-  }
+  return resultado.jogos.filter(jogo =>
+    jogo.titulo.toLowerCase().includes(nome.toLowerCase())
+  );
 }
 
-// ======================================================
 // PREÇOS
-// ======================================================
 async function buscarPrecosPorJogo(jogo_id) {
-  console.log(`💰 GET /precos/jogo/${jogo_id}`);
-  return await fazRequisicao(`/precos/jogo/${jogo_id}`, 'GET');
+  return await fazRequisicao(`/precos/jogo/${jogo_id}`, 'GET'); // Preços por jogo
 }
 
 async function listarPrecos() {
-  console.log('💰 GET /precos');
-  return await fazRequisicao('/precos', 'GET');
+  return await fazRequisicao('/precos', 'GET'); // Lista todos os preços
 }
 
 async function criarPreco(preco_data) {
-  console.log('➕ POST /precos', preco_data);
-  return await fazRequisicao('/precos', 'POST', preco_data);
+  return await fazRequisicao('/precos', 'POST', preco_data); // Cria preço
 }
 
 async function atualizarPreco(preco_id, preco_data) {
-  console.log(`✏️ PUT /precos/${preco_id}`, preco_data);
-  return await fazRequisicao(`/precos/${preco_id}`, 'PUT', preco_data);
+  return await fazRequisicao(`/precos/${preco_id}`, 'PUT', preco_data); // Atualiza
 }
 
 async function deletarPreco(preco_id) {
-  console.log(`🗑 DELETE /precos/${preco_id}`);
-  return await fazRequisicao(`/precos/${preco_id}`, 'DELETE');
+  return await fazRequisicao(`/precos/${preco_id}`, 'DELETE'); // Deleta
 }
 
-// ======================================================
 // PLATAFORMAS
-// ======================================================
 async function listarPlataformas() {
-  console.log('🎮 GET /plataformas');
-  return await fazRequisicao('/plataformas', 'GET');
+  return await fazRequisicao('/plataformas', 'GET'); // Lista plataformas
 }
 
 async function criarPlataforma(plataforma_data) {
-  console.log('➕ POST /plataformas', plataforma_data);
-  return await fazRequisicao('/plataformas', 'POST', plataforma_data);
+  return await fazRequisicao('/plataformas', 'POST', plataforma_data); // Cria
 }
 
 async function atualizarPlataforma(plataforma_id, plataforma_data) {
-  console.log(`✏️ PUT /plataformas/${plataforma_id}`, plataforma_data);
-  return await fazRequisicao(`/plataformas/${plataforma_id}`, 'PUT', plataforma_data);
+  return await fazRequisicao(`/plataformas/${plataforma_id}`, 'PUT', plataforma_data); // Atualiza
 }
 
 async function deletarPlataforma(plataforma_id) {
-  console.log(`🗑 DELETE /plataformas/${plataforma_id}`);
-  return await fazRequisicao(`/plataformas/${plataforma_id}`, 'DELETE');
+  return await fazRequisicao(`/plataformas/${plataforma_id}`, 'DELETE'); // Deleta
 }
 
-// ======================================================
 // USUÁRIOS
-// ======================================================
 async function criarUsuario(usuario_data) {
-  console.log('➕ POST /usuarios', usuario_data);
-  return await fazRequisicao('/usuarios', 'POST', usuario_data);
+  return await fazRequisicao('/usuarios', 'POST', usuario_data); // Cria usuário
 }
 
-// ======================================================
 // JOGOS - CRUD
-// ======================================================
 async function criarJogo(jogo_data) {
-  console.log('➕ POST /jogos', jogo_data);
-  return await fazRequisicao('/jogos', 'POST', jogo_data);
+  return await fazRequisicao('/jogos', 'POST', jogo_data); // Cria jogo
 }
 
 async function atualizarJogo(jogo_id, jogo_data) {
-  console.log(`✏️ PUT /jogos/${jogo_id}`, jogo_data);
-  return await fazRequisicao(`/jogos/${jogo_id}`, 'PUT', jogo_data);
+  return await fazRequisicao(`/jogos/${jogo_id}`, 'PUT', jogo_data); // Atualiza
 }
 
 async function deletarJogo(jogo_id) {
-  console.log(`🗑 DELETE /jogos/${jogo_id}`);
-  return await fazRequisicao(`/jogos/${jogo_id}`, 'DELETE');
+  return await fazRequisicao(`/jogos/${jogo_id}`, 'DELETE'); // Deleta
 }

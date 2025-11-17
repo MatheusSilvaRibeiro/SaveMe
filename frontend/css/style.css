@@ -1,22 +1,3 @@
-/*
-  ====================================================
-  ESTILOS CUSTOMIZADOS DO SAVEME GAMES
-  ====================================================
-  
-  CSS = Define cores, tamanhos, fonts, posições, etc
-  
-  Você coloca aqui tudo que não está no Bootstrap
-  Ou que quer MODIFICAR do Bootstrap
-*/
-
-/* 
-  ====================================================
-  VARIÁVEIS (Cores que usamos em todo o site)
-  ====================================================
-  
-  Assim se quisermos mudar a cor, só mudamos aqui!
-  E muda em TUDO que usa essa variável
-*/
 :root {
   --cor-primaria: #007bff;    /* Azul */
   --cor-secundaria: #28a745;  /* Verde (mais barato) */
@@ -24,13 +5,9 @@
   --cor-fundo: #f8f9fa;       /* Cinza bem claro */
 }
 
-/* 
-  ====================================================
-  BODY = Estilo geral da página
-  ====================================================
-*/
+/*Estilo geral da página*/
 body {
-  /* Font = Tipo de letra */
+  /*Tipo de letra */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   
   /* Cor do fundo */
@@ -40,15 +17,9 @@ body {
   color: #333;
 }
 
-/* 
-  ====================================================
-  CARDS (cartões de jogos)
-  ====================================================
-  
-  .card-jogo = Classe customizada para os cards dos jogos
-*/
+/*CARDS (cartões de jogos)*/
 .card-jogo {
-  /* Sombra (efeito 3D) */
+  /* Sombra */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   
   /* Borda arredondada */
@@ -61,10 +32,7 @@ body {
   margin-bottom: 20px;
 }
 
-/* 
-  Quando passa o mouse sobre o card, ele cresce um pouco
-  :hover = Quando o mouse está sobre o elemento
-*/
+/*  Quando passa o mouse sobre o card, ele cresce um pouco*/
 .card-jogo:hover {
   /* Transform = Transformação */
   transform: translateY(-5px);
@@ -73,11 +41,7 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* 
-  ====================================================
-  TABELA DE PREÇOS (dentro de cada card)
-  ====================================================
-*/
+/* TABELA DE PREÇOS (dentro de cada card)*/
 .tabela-precos {
   /* Sem margem inferior */
   margin-bottom: 0;
@@ -95,13 +59,7 @@ body {
   background-color: rgba(0, 123, 255, 0.1);
 }
 
-/* 
-  ====================================================
-  PREÇO MAIS BARATO (verde com estrela)
-  ====================================================
-  
-  .preco-menor = Classe que usamos no HTML para marcar o menor preço
-*/
+/*PREÇO MAIS BARATO (verde com estrela)*/
 .preco-menor {
   /* Cor verde */
   color: var(--cor-secundaria);
@@ -113,11 +71,7 @@ body {
   font-size: 1.1em;
 }
 
-/* 
-  ====================================================
-  BOTÕES
-  ====================================================
-*/
+/* BOTÕES */
 
 /* Botão primário (buscar) */
 .btn-primary {
@@ -146,11 +100,7 @@ body {
   color: var(--cor-alerta);
 }
 
-/* 
-  ====================================================
-  FOOTER (rodapé)
-  ====================================================
-*/
+/* FOOTER (rodapé) */
 footer {
   /* Margem top grande */
   margin-top: 50px;
@@ -159,15 +109,7 @@ footer {
   border-top: 1px solid #ddd;
 }
 
-/* 
-  ====================================================
-  RESPONSIVIDADE (Adaptar para mobile)
-  ====================================================
-  
-  @media = Se a tela for menor que X pixels
-  
-  Assim o site funciona bem em celular, tablet e desktop
-*/
+/* RESPONSIVIDADE (Adaptar para mobile)*/
 
 /* Se a tela tiver menos de 768px (tablet/mobile) */
 @media (max-width: 768px) {

@@ -1,88 +1,74 @@
-/*
-  ====================================================
-  PUBLIC.JS - LÓGICA DA PÁGINA PÚBLICA
-  ====================================================
-*/
+/* UBLIC.JS — Lógica da página pública do SaveMe */
 
-// ====================================================
-// VARIÁVEIS GLOBAIS
-// ====================================================
+// Estado global da página
 let jogos_encontrados = [];
 let precos_atuais = [];
 
-// ====================================================
-// QUANDO A PÁGINA CARREGA
-// ====================================================
+// Quando a página carrega
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('✅ Página pública carregada');
+  console.log('Página pública carregada');
   configurarEventos();
 });
 
-// ====================================================
-// CONFIGURAR EVENTOS
-// ====================================================
+// Registra eventos da interface
 function configurarEventos() {
-  document.getElementById('btnBuscar').addEventListener('click', buscarJogos);
 
-  document.getElementById('buscarJogo').addEventListener('keypress', function (evento) {
-    if (evento.key === 'Enter') buscarJogos();
-  });
+  // Botão "Buscar"
+  document.getElementById('btnBuscar')
+    .addEventListener('click', buscarJogos);
+
+  // Enter dentro do campo de busca
+  document.getElementById('buscarJogo')
+    .addEventListener('keypress', function (evento) {
+      if (evento.key === 'Enter') buscarJogos();
+    });
 }
 
-// ====================================================
-// BUSCAR JOGOS
-// ====================================================
+// Busca jogos pelo nome digitado
 async function buscarJogos() {
-  console.log('🔍 Iniciando busca...');
+  console.log('Iniciando busca...');
 
-  const inputBuscar = document.getElementById('buscarJogo');
-  const termo_busca = inputBuscar.value.trim();
-
-  if (termo_busca === '') {
-    alert('⚠️ Digite o nome de um jogo para buscar!');
+  const termo = document.getElementById('buscarJogo').value.trim();
+  if (termo === '') {
+    alert('Digite o nome de um jogo.');
     return;
   }
 
   mostraCarregando();
 
   try {
-    const resultado = await buscarJogo(termo_busca);
+    // Chamada à API
+    const resultado = await buscarJogo(termo);
 
     jogos_encontrados = resultado || [];
-
-    console.log(`✅ ${jogos_encontrados.length} jogos encontrados`);
+    console.log(jogos_encontrados.length + ' jogos encontrados');
 
     mostrarResultados();
 
   } catch (erro) {
-    console.error('❌ Erro ao buscar jogos:', erro);
-    alert('Erro ao buscar jogos');
+    console.error('Erro ao buscar jogos', erro);
+    alert('Erro ao buscar jogos.');
   }
 }
 
-// ====================================================
-// MOSTRAR LOADING
-// ====================================================
+// Exibe o loading
 function mostraCarregando() {
   document.getElementById('resultados').innerHTML = `
     <div class="loading">
-      <div class="spinner-border loading-spinner text-primary" role="status">
-        <span class="visually-hidden">Carregando...</span>
-      </div>
+      <div class="spinner-border loading-spinner text-primary"></div>
       <p class="text-muted">Buscando jogos...</p>
     </div>
   `;
 }
 
-// ====================================================
-// MOSTRAR RESULTADOS
-// ====================================================
+// Monta lista de resultados
 async function mostrarResultados() {
+
   if (jogos_encontrados.length === 0) {
     document.getElementById('resultados').innerHTML = `
       <div class="message-box message-empty">
         <i class="bi bi-exclamation-triangle"></i>
-        Nenhum jogo encontrado com esse nome.
+        Nenhum jogo encontrado.
       </div>
     `;
     return;
@@ -90,6 +76,7 @@ async function mostrarResultados() {
 
   let html = '';
 
+  // Monta card de cada jogo
   for (let jogo of jogos_encontrados) {
     html += await montarCardJogo(jogo);
   }
@@ -97,30 +84,28 @@ async function mostrarResultados() {
   document.getElementById('resultados').innerHTML = html;
 }
 
-// ====================================================
-// MONTAR CARD DO JOGO
-// ====================================================
+// Monta card visual de cada jogo
 async function montarCardJogo(jogo) {
-  console.log(`🎮 Montando card do jogo: ${jogo.titulo}`);
+  console.log('Montando card de:', jogo.titulo);
 
   let tabela_precos_html = '';
 
   try {
-    const precos_resultado = await buscarPrecosPorJogo(jogo.id);
+    const precos = await buscarPrecosPorJogo(jogo.id);
 
-    if (!precos_resultado || !precos_resultado.precos || precos_resultado.precos.length === 0) {
+    if (!precos || !precos.precos || precos.precos.length === 0) {
       tabela_precos_html = `
         <div class="message-box message-empty">
           <i class="bi bi-info-circle"></i>
-          Nenhum preço registrado para este jogo ainda.
+          Nenhum preço cadastrado.
         </div>
       `;
     } else {
-      tabela_precos_html = montarTabelaPrecos(precos_resultado.precos);
+      tabela_precos_html = montarTabelaPrecos(precos.precos);
     }
 
   } catch (erro) {
-    console.error('❌ Erro ao buscar preços:', erro);
+    console.error('Erro ao carregar preços', erro);
     tabela_precos_html = `
       <div class="message-box message-empty">
         <i class="bi bi-info-circle"></i>
@@ -157,7 +142,7 @@ async function montarCardJogo(jogo) {
 
         <div class="jogo-descricao">
           <strong>Descrição:</strong>
-          <p style="margin: 10px 0 0 0;">${jogo.descricao}</p>
+          <p>${jogo.descricao}</p>
         </div>
 
         <div>
@@ -171,29 +156,31 @@ async function montarCardJogo(jogo) {
   `;
 }
 
-// ====================================================
-// MONTAR TABELA DE PREÇOS
-// ====================================================
+// Monta tabela com todos os preços
 function montarTabelaPrecos(precos) {
 
   if (!precos || precos.length === 0) {
-    return '<p>Sem preços disponíveis</p>';
+    return '<p>Sem preços disponíveis.</p>';
   }
 
-  const precos_ordenados = [...precos].sort((a, b) => a.valor - b.valor);
-  const menor_preco = precos_ordenados[0].valor;
+  // Ordena por plataforma
+  const lista = [...precos]
+    .map(p => ({ ...p, valor: parseFloat(p.valor) }))
+    .sort((a, b) => a.plataforma_id - b.plataforma_id);
 
-  const linhas = precos.map(preco => {
-    const eh_menor = preco.valor === menor_preco;
+  const menor = Math.min(...lista.map(p => p.valor));
+
+  const linhas = lista.map(preco => {
+    const destaque = preco.valor === menor;
 
     return `
-      <tr${eh_menor ? ' style="background: rgba(40, 167, 69, 0.1);"' : ''}>
-        <td><i class="bi bi-shop"></i> ${preco.plataforma_nome}</td>
+      <tr ${destaque ? 'style="background: rgba(40, 167, 69, 0.1);"' : ''}>
+        <td>${preco.plataforma_nome}</td>
         <td>
-          ${eh_menor
-            ? `<span class="preco-menor">R$ ${preco.valor.toFixed(2).replace('.', ',')} <span class="badge-menor">⭐ MELHOR PREÇO!</span></span>`
-            : `R$ ${preco.valor.toFixed(2).replace('.', ',')}`
-          }
+          <span class="${destaque ? 'preco-menor' : 'preco-valor'}">
+            R$ ${preco.valor.toFixed(2).replace('.', ',')}
+            ${destaque ? '<span class="badge-menor">⭐ MELHOR PREÇO</span>' : ''}
+          </span>
         </td>
       </tr>
     `;
@@ -214,11 +201,9 @@ function montarTabelaPrecos(precos) {
   `;
 }
 
-// ====================================================
-// FORMATAR DATA
-// ====================================================
+// Formata data YYYY-MM-DD → DD/MM/YYYY
 function formatarData(data) {
   if (!data) return '-';
-  const [ano, mes, dia] = data.split('-');
-  return `${dia}/${mes}/${ano}`;
+  const [a, m, d] = data.split('-');
+  return `${d}/${m}/${a}`;
 }

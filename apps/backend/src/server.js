@@ -7,15 +7,16 @@ import precosRoutes from './routes/precosRoutes.js';
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+app.use(cors());               // Libera acesso da API para qualquer frontend
+app.use(express.json());       // Permite receber JSON no corpo das requisições
 
-// Rotas do SaveMe Games
-app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/plataformas', plataformasRoutes);
-app.use('/api/jogos', jogosRoutes);
-app.use('/api/precos', precosRoutes);
+// Registra as rotas da API
+app.use('/api/usuarios', usuariosRoutes);       // Rotas de usuários
+app.use('/api/plataformas', plataformasRoutes); // Rotas de plataformas
+app.use('/api/jogos', jogosRoutes);             // Rotas de jogos
+app.use('/api/precos', precosRoutes);           // Rotas de preços
 
+// Inicia o servidor na porta 3000
 app.listen(3000, () => {
   console.log('🚀 Servidor rodando em http://localhost:3000');
 });

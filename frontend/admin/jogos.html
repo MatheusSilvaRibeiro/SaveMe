@@ -5,75 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Gerenciar Jogos - SaveMe Games</title>
   
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   
   <style>
-    /*
-      ====================================================
-      ESTILOS DA PÁGINA ADMIN DE JOGOS
-      ====================================================
-    */
-    
     body {
       background-color: #f8f9fa;
     }
     
-    /* Navbar */
     .navbar {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
-    /* Container principal */
     .admin-container {
       padding: 30px 0;
     }
     
-    /* Título da página */
     .page-title {
       border-bottom: 3px solid #007bff;
       padding-bottom: 15px;
       margin-bottom: 30px;
     }
     
-    /* Card do formulário */
     .form-card {
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       border-radius: 12px;
       margin-bottom: 30px;
     }
     
-    /* Tabela */
-    .table-responsive {
-      border-radius: 8px;
-      overflow: hidden;
+    .etapa-container {
+      display: none;
     }
     
-    .table-jogos {
+    .etapa-container.ativa {
+      display: block;
+    }
+    
+    .tabela-precos {
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
-    /* Hover na tabela */
-    .table-jogos tbody tr:hover {
+    .tabela-precos tbody tr:hover {
       background-color: rgba(0, 123, 255, 0.1);
     }
     
-    /* Botões */
     .btn-acao {
       padding: 4px 8px;
       font-size: 0.85em;
       margin-right: 5px;
     }
+    
+    .progress-etapas {
+      margin-bottom: 30px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- ====================================================
-       NAVBAR
-       ==================================================== -->
   <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
       <span class="navbar-brand mb-0 h1">
@@ -88,12 +76,8 @@
     </div>
   </nav>
 
-  <!-- ====================================================
-       CONTAINER PRINCIPAL
-       ==================================================== -->
   <div class="container admin-container">
     
-    <!-- Título -->
     <div class="row">
       <div class="col-12">
         <h1 class="page-title">
@@ -102,31 +86,35 @@
       </div>
     </div>
 
-    <!-- ====================================================
-         SEÇÃO 1: FORMULÁRIO
-         ==================================================== -->
     <div class="row mb-4">
-      <div class="col-lg-6">
+      <div class="col-lg-8 offset-lg-2">
         
         <div class="card form-card">
           
-          <!-- Header do card -->
           <div class="card-header bg-primary text-white">
             <h5 class="mb-0" id="formTitulo">
-              <i class="bi bi-plus-circle"></i> Adicionar Novo Jogo
+              <i class="bi bi-plus-circle"></i> Criar Novo Jogo
             </h5>
           </div>
           
-          <!-- Body do card -->
           <div class="card-body">
             
-            <!-- Área de mensagens -->
             <div id="mensagemForm"></div>
             
-            <!-- Formulário -->
-            <form id="formJogo">
+            <div class="progress-etapas mb-4">
+              <div class="progress" style="height: 25px;">
+                <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                  <span id="progressText">Etapa 1 de 2</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="etapa-container ativa" id="etapa1">
               
-              <!-- Campo: Título -->
+              <h4 class="mb-4">
+                <i class="bi bi-info-circle"></i> Dados do Jogo
+              </h4>
+              
               <div class="mb-3">
                 <label for="inputTitulo" class="form-label">
                   Título *
@@ -140,7 +128,6 @@
                 >
               </div>
               
-              <!-- Campo: Desenvolvedora -->
               <div class="mb-3">
                 <label for="inputDesenvolvedora" class="form-label">
                   Desenvolvedora *
@@ -154,104 +141,134 @@
                 >
               </div>
               
-              <!-- Campo: Gênero -->
-              <div class="mb-3">
-                <label for="inputGenero" class="form-label">
-                  Gênero *
-                </label>
-                <input 
-                  type="text" 
-                  id="inputGenero" 
-                  class="form-control" 
-                  placeholder=""
-                  required
-                >
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="inputGenero" class="form-label">
+                      Gênero *
+                    </label>
+                    <input 
+                      type="text" 
+                      id="inputGenero" 
+                      class="form-control" 
+                      placeholder=""
+                      required
+                    >
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="inputData" class="form-label">
+                      Data de Lançamento *
+                    </label>
+                    <input 
+                      type="date" 
+                      id="inputData" 
+                      class="form-control"
+                      required
+                    >
+                  </div>
+                </div>
               </div>
               
-              <!-- Campo: Descrição -->
-              <div class="mb-3">
-                <label for="inputDescricao" class="form-label">
-                  Descrição *
-                </label>
-                <textarea 
-                  id="inputDescricao" 
-                  class="form-control" 
-                  placeholder="Descrição do jogo..."
-                  rows="3"
-                  required
-                ></textarea>
-              </div>
+             <div class="mb-3">
+             <label for="inputDescricao" class="form-label">Descrição</label>
+  <textarea id="inputDescricao" class="form-control"placeholder="Descrição do jogo..."rows="4"></textarea></div>
               
-              <!-- Campo: Data de Lançamento -->
-              <div class="mb-3">
-                <label for="inputData" class="form-label">
-                  Data de Lançamento *
-                </label>
-                <input 
-                  type="date" 
-                  id="inputData" 
-                  class="form-control"
-                  required
-                >
-              </div>
-              
-              <!-- Campo oculto para ID (quando editando) -->
-              <input type="hidden" id="inputJogoId" value="">
-              
-              <!-- Botões -->
-              <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button 
-                  type="submit" 
+                  type="button" 
                   class="btn btn-primary"
-                  id="btnSalvar"
+                  id="btnProximo"
+                  onclick="irParaEtapa2()"
                 >
-                  <i class="bi bi-check-circle"></i> Salvar Jogo
+                  <i class="bi bi-arrow-right"></i> Próximo
+                </button>
+              </div>
+              
+            </div>
+            
+            <!--  PLATAFORMAS E PREÇOS-->
+            <div class="etapa-container" id="etapa2">
+              
+              <h4 class="mb-4">
+                <i class="bi bi-tag"></i> Adicionar Plataformas e Preços
+              </h4>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label for="selectPlataforma" class="form-label">
+                    Plataforma *
+                  </label>
+                  <select id="selectPlataforma" class="form-select" required>
+                    <option value="">-- Selecione uma plataforma --</option>
+                  </select>
+                </div>
+                
+                <div class="col-md-6">
+                  <label for="inputValor" class="form-label">
+                    Valor (R$) *
+                  </label>
+                  <input 
+                    type="number" 
+                    id="inputValor" 
+                    class="form-control" 
+                    placeholder="59.99"
+                    step="0.01"
+                    min="0"
+                    required
+                  >
+                </div>
+              </div>
+              
+              <div class="d-grid gap-2 d-md-flex justify-content-md-between mb-4">
+                <button 
+                  type="button" 
+                  class="btn btn-success"
+                  id="btnAdicionarPreco"
+                  onclick="adicionarPrecoTemporario()"
+                >
+                  <i class="bi bi-plus-circle"></i> Adicionar Preço
+                </button>
+              </div>
+              
+              <div id="areaPrecos">
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle"></i> 
+                  Nenhum preço adicionado ainda. Adicione pelo menos um para continuar.
+                </div>
+              </div>
+              
+              <div class="d-grid gap-2 d-md-flex justify-content-md-between mt-4">
+                <button 
+                  type="button" 
+                  class="btn btn-secondary"
+                  onclick="voltarParaEtapa1()"
+                >
+                  <i class="bi bi-arrow-left"></i> Voltar
                 </button>
                 
                 <button 
                   type="button" 
-                  class="btn btn-secondary" 
-                  id="btnCancelar"
-                  style="display: none;"
+                  class="btn btn-primary"
+                  id="btnSalvarJogo"
+                  onclick="salvarJogoCompleto()"
                 >
-                  <i class="bi bi-x-circle"></i> Cancelar
+                  <i class="bi bi-check-circle"></i> Salvar Jogo Completo
                 </button>
               </div>
               
-            </form>
+            </div>
             
-          </div>
-        </div>
-        
-      </div>
-      
-      <!-- Info box -->
-      <div class="col-lg-6">
-        
-        <div class="card">
-          <div class="card-header bg-info text-white">
-            <h5 class="mb-0">
-              <i class="bi bi-info-circle"></i> Informações
-            </h5>
-          </div>
-          
-          <div class="card-body">
-            <p><strong>Total de Jogos:</strong> <span id="totalJogos">0</span></p>
-            <p class="mb-0">
-              <small class="text-muted">
-                Use este formulário para adicionar novos jogos ao sistema. 
-                Preencha todos os campos e clique em "Salvar Jogo".
-              </small>
-            </p>
+            <input type="hidden" id="inputJogoId" value="">
+            
           </div>
         </div>
         
       </div>
     </div>
 
-    <!-- ====================================================
-         SEÇÃO 2: TABELA DE JOGOS
-         ==================================================== -->
     <div class="row">
       <div class="col-12">
         
@@ -273,17 +290,10 @@
     
   </div>
 
-  <!-- ====================================================
-       RODAPÉ
-       ==================================================== -->
   <footer class="bg-dark text-white text-center py-4 mt-5">
-    <p>&copy; 2024 SaveMe Games. Todos os direitos reservados.</p>
+    <p>&copy; 2025 SaveMe Games. Todos os direitos reservados.</p>
   </footer>
 
-  <!-- ====================================================
-       SCRIPTS
-       ==================================================== -->
-  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/admin-jogos.js"></script>

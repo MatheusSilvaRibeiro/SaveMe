@@ -1,7 +1,6 @@
-// Importa o pool de conexão do banco de dados PostgreSQL
 import pool from '../db.js';
 
-// ============ CRIAR JOGO ============
+// CRIAR JOGO 
 // Função que cria um novo jogo no banco
 export async function criarJogo(req, res) {
   try {
@@ -11,12 +10,11 @@ export async function criarJogo(req, res) {
 
     // Validação: Verifica se titulo foi informado (é obrigatório)
     if (!titulo) {
-      // Retorna erro 400 (Bad Request) se faltar título
+      // Retorna erro 400 se faltar título
       return res.status(400).json({ erro: 'Título do jogo é obrigatório' });
     }
 
     // Executa a query INSERT no banco de dados
-    // $1, $2, $3, $4, $5 = placeholders para evitar SQL injection
     // RETURNING * = retorna todos os dados do jogo criado
     const result = await pool.query(
       'INSERT INTO jogos (titulo, desenvolvedora, genero, descricao, data_lancamento) VALUES ($1, $2, $3, $4, $5) RETURNING *',
@@ -40,7 +38,7 @@ export async function criarJogo(req, res) {
   }
 }
 
-// ============ LISTAR TODOS OS JOGOS ============
+// LISTAR TODOS OS JOGOS 
 // Função que retorna todos os jogos do banco
 export async function listarJogos(req, res) {
   try {
@@ -63,7 +61,7 @@ export async function listarJogos(req, res) {
   }
 }
 
-// ============ BUSCAR JOGO POR ID ============
+//  BUSCAR JOGO POR ID 
 // Função que retorna um jogo específico pelo ID
 export async function buscarJogo(req, res) {
   try {
@@ -93,7 +91,7 @@ export async function buscarJogo(req, res) {
   }
 }
 
-// ============ ATUALIZAR JOGO ============
+// ATUALIZAR JOGO 
 // Função que atualiza um jogo existente
 export async function atualizarJogo(req, res) {
   try {
@@ -130,7 +128,7 @@ export async function atualizarJogo(req, res) {
   }
 }
 
-// ============ DELETAR JOGO ============
+// DELETAR JOGO 
 // Função que remove um jogo do banco
 export async function deletarJogo(req, res) {
   try {

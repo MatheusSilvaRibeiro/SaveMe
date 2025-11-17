@@ -1,7 +1,6 @@
-// ============ IMPORTAÇÕES ============
 import pool from '../db.js';
 
-// ============ CRIAR PREÇO ============
+//  CRIAR PREÇO 
 export async function criarPreco(req, res) {
   try {
     const { jogo_id, plataforma_id, valor } = req.body;
@@ -47,7 +46,7 @@ export async function criarPreco(req, res) {
   }
 }
 
-// ============ LISTAR TODOS OS PREÇOS ============
+// LISTAR TODOS OS PREÇOS 
 export async function listarPrecos(req, res) {
   try {
     const result = await pool.query(
@@ -75,7 +74,7 @@ export async function listarPrecos(req, res) {
   }
 }
 
-// ============ BUSCAR PREÇO POR ID ============
+//  BUSCAR PREÇO POR ID 
 export async function buscarPreco(req, res) {
   try {
     const { id } = req.params;
@@ -107,7 +106,7 @@ export async function buscarPreco(req, res) {
   }
 }
 
-// ============ BUSCAR PREÇOS POR JOGO ============
+// BUSCAR PREÇOS POR JOGO 
 export async function buscarPrecosPorJogo(req, res) {
   try {
     const { jogo_id } = req.params;
@@ -143,7 +142,7 @@ export async function buscarPrecosPorJogo(req, res) {
   }
 }
 
-// ============ ATUALIZAR PREÇO ============
+// ATUALIZAR PREÇO 
 export async function atualizarPreco(req, res) {
   try {
     const { id } = req.params;

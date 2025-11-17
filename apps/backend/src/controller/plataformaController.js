@@ -1,7 +1,6 @@
-// Importa o pool de conexão do banco de dados PostgreSQL
 import pool from '../db.js';
 
-// ============ CRIAR PLATAFORMA ============
+// CRIAR PLATAFORMA 
 // Função que cria uma nova plataforma (loja de games)
 export async function criarPlataforma(req, res) {
   try {
@@ -41,7 +40,7 @@ export async function criarPlataforma(req, res) {
   }
 }
 
-// ============ LISTAR TODAS AS PLATAFORMAS ============
+// LISTAR TODAS AS PLATAFORMAS 
 // Função que retorna todas as plataformas do banco
 export async function listarPlataformas(req, res) {
   try {
@@ -64,7 +63,7 @@ export async function listarPlataformas(req, res) {
   }
 }
 
-// ============ BUSCAR PLATAFORMA POR ID ============
+// BUSCAR PLATAFORMA POR ID 
 // Função que retorna uma plataforma específica pelo ID
 export async function buscarPlataforma(req, res) {
   try {
@@ -94,14 +93,12 @@ export async function buscarPlataforma(req, res) {
   }
 }
 
-// ============ ATUALIZAR PLATAFORMA ============
+// ATUALIZAR PLATAFORMA 
 // Função que atualiza uma plataforma existente
 export async function atualizarPlataforma(req, res) {
   try {
-    // Pega o ID da URL
     const { id } = req.params;
 
-    // Pega os dados que podem ser atualizados do body
     const { nome, url } = req.body;
 
     // COALESCE = função SQL que retorna o primeiro valor não-nulo
@@ -131,7 +128,7 @@ export async function atualizarPlataforma(req, res) {
   }
 }
 
-// ============ DELETAR PLATAFORMA ============
+// DELETAR PLATAFORMA 
 // Função que remove uma plataforma do banco
 export async function deletarPlataforma(req, res) {
   try {
