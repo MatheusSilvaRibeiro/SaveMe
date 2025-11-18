@@ -1,0 +1,50 @@
+
+    body {
+      background-color: #f8f9fa;
+    }
+    
+    .navbar {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .admin-container {
+      padding: 30px 0;
+    }
+    
+    .page-title {
+      border-bottom: 3px solid #007bff;
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .form-card {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    
+    .etapa-container {
+      display: none;
+    }
+    
+    .etapa-container.ativa {
+      display: block;
+    }
+    
+    .tabela-precos {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .tabela-precos tbody tr:hover {
+      background-color: rgba(0, 123, 255, 0.1);
+    }
+    
+    .btn-acao {
+      padding: 4px 8px;
+      font-size: 0.85em;
+      margin-right: 5px;
+    }
+    
+    .progress-etapas {
+      margin-bottom: 30px;
+    }

@@ -80,7 +80,9 @@ export async function buscarJogo(req, res) {
     }
 
     // Retorna o primeiro (e único) jogo encontrado
-    res.json(result.rows[0]);
+    res.json({
+      jogo: result.rows[0]
+    });
 
   } catch (erro) {
     console.error(erro);
@@ -156,3 +158,5 @@ export async function deletarJogo(req, res) {
     });
   }
 }
+
+// cath try tratamento de erro bd

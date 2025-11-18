@@ -1,6 +1,6 @@
 const URL_BASE = 'http://localhost:3000/api';
-
 // Função genérica de requisições
+
 async function fazRequisicao(endpoint, metodo = 'GET', dados = null) {
   try {
     const url = `${URL_BASE}${endpoint}`;  // Monta a URL da API
@@ -22,10 +22,11 @@ async function fazRequisicao(endpoint, metodo = 'GET', dados = null) {
 
     return await resposta.json();           // Retorna os dados da API
   } catch (erro) {
-    console.error('❌ Erro na requisição:', erro);
+    console.error(' Erro na requisição:', erro);
     return null;                            // Em caso de erro, retorna null
   }
 }
+
 
 // JOGOS
 async function listarJogos() {
@@ -33,14 +34,22 @@ async function listarJogos() {
 }
 
 async function buscarJogo(nome) {
-  if (!nome || nome.trim() === "") return [];
 
   const resultado = await listarJogos();       // Filtra jogos pelo nome
-  if (!resultado || !resultado.jogos) return [];
 
   return resultado.jogos.filter(jogo =>
     jogo.titulo.toLowerCase().includes(nome.toLowerCase())
   );
+}
+
+async function buscarJogoPorId(jogo_id) {
+  const resultado = await fazRequisicao(`/jogos/${jogo_id}`, 'GET');
+  return resultado;
+}
+
+async function buscarJogoPorId(jogo_id) {
+  const resultado = await fazRequisicao(`/jogos/${jogo_id}`, 'GET');
+  return resultado;
 }
 
 // PREÇOS

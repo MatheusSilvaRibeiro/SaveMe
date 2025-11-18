@@ -4,7 +4,7 @@ const URL_BASE = 'http://localhost:3000/api';
 async function fazRequisicao(endpoint, metodo = 'GET', dados = null) {
   try {
     const url = `${URL_BASE}${endpoint}`;  // URL final da requisição
-    console.log(`📡 ${metodo} → ${url}`);
+    console.log(` ${metodo} → ${url}`);
     
     const opcoes = {
       method: metodo,                     // Método HTTP
@@ -16,13 +16,13 @@ async function fazRequisicao(endpoint, metodo = 'GET', dados = null) {
     }
     
     const resposta = await fetch(url, opcoes); // Chama a API
-    console.log(`📡 Status: ${resposta.status}`);
+    console.log(` Status: ${resposta.status}`);
     
     if (!resposta.ok) throw new Error();
 
     return await resposta.json(); // Retorna o JSON da API
   } catch (erro) {
-    console.error('❌ Erro na requisição:', erro);
+    console.error(' Erro na requisição:', erro);
     return null; // Retorno seguro
   }
 }

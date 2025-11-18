@@ -1,0 +1,107 @@
+
+    /* ESTILOS DA PÁGINA DE CADASTRO */
+    
+    body {
+      /* Fundo com gradiente */
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Container do formulário */
+    .signup-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+    }
+    
+    /* Título */
+    .signup-title {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    
+    .signup-title h1 {
+      font-size: 2em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .signup-title p {
+      color: #666;
+      margin: 0;
+    }
+    
+    /* Campos do formulário */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .form-control {
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-size: 1em;
+      transition: border-color 0.3s ease;
+    }
+    
+    /* Quando o input está focado */
+    .form-control:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+      outline: none;
+    }
+    
+    /* Botão de cadastro */
+    .btn-cadastro {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      padding: 12px 20px;
+      font-size: 1.1em;
+      font-weight: 600;
+      width: 100%;
+      border-radius: 8px;
+      transition: transform 0.2s ease;
+    }
+    
+    .btn-cadastro:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Link para login */
+    .signup-footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+    }
+    
+    .signup-footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    /* Mensagens de erro */
+    .alert {
+      border-radius: 8px;
+      border: none;
+    }
+    
+    /* Ícone do formulário */
+    .form-icon {
+      position: relative;
+      margin-bottom: 5px;
+    }

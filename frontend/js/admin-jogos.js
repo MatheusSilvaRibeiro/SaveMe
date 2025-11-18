@@ -1,407 +1,209 @@
-let jogos_lista = [];
-let plataformas_lista = [];
-let precos_lista = [];
-let precos_temporarios = [];
-let etapa_atual = 1;
+// =========================
+// CONFIGURAÇÕES INICIAIS
+// =========================
 
-document.addEventListener('DOMContentLoaded', async function() {
-  console.log('✅ Página admin de jogos carregada');
-  
-  await carregarDados();
-  configurarEventos();
-});
+let precosTemporarios = [];
+let modo_edicao = false;
+let jogo_editando_id = null;
 
-async function carregarDados() {
-  console.log('📥 Carregando dados...');
-  
-  try {
-    const jogos_resultado = await listarJogos();
-    if (jogos_resultado && jogos_resultado.jogos) {
-      jogos_lista = jogos_resultado.jogos;
-      console.log(`✅ ${jogos_lista.length} jogos carregados`);
-      mostrarTabelaJogos();
-    }
-    
-    const plataformas_resultado = await listarPlataformas();
-    if (plataformas_resultado && plataformas_resultado.plataformas) {
-      plataformas_lista = plataformas_resultado.plataformas;
-      console.log(`✅ ${plataformas_lista.length} plataformas carregadas`);
-      preencherSelectPlataformas();
-    }
-    
-    const precos_resultado = await listarPrecos();
-    if (precos_resultado && precos_resultado.precos) {
-      precos_lista = precos_resultado.precos;
-      console.log(`✅ ${precos_lista.length} preços carregados`);
-    }
-    
-  } catch (erro) {
-    console.error('❌ Erro:', erro);
-  }
-}
+// =========================
+// BUSCAR E MONTAR TABELA
+// =========================
 
-function configurarEventos() {
-  console.log('⚙️ Configurando eventos...');
-}
+async function carregarJogos() {
+  const area = document.getElementById("areaTabela");
+  area.innerHTML = `
+    <div class="text-center py-4">
+      <div class="spinner-border" role="status"></div>
+      <p class="mt-2">Carregando jogos...</p>
+    </div>
+  `;
 
-function preencherSelectPlataformas() {
-  const select = document.getElementById('selectPlataforma');
-  
-  select.innerHTML = '<option value="">-- Selecione uma plataforma --</option>';
-  
-  plataformas_lista.forEach(plataforma => {
-    const option = document.createElement('option');
-    option.value = plataforma.id;
-    option.textContent = plataforma.nome;
-    select.appendChild(option);
-  });
-}
+  const dados = await listarJogos();
 
-function irParaEtapa2() {
-  console.log('➡️ Indo para etapa 2...');
-  
-  const titulo = document.getElementById('inputTitulo').value.trim();
-  const desenvolvedora = document.getElementById('inputDesenvolvedora').value.trim();
-  const genero = document.getElementById('inputGenero').value.trim();
-  const descricao = document.getElementById('inputDescricao').value.trim();
-  const data = document.getElementById('inputData').value;
-
-  // ✔️ validação correta
-  if (!titulo || !desenvolvedora || !genero || !descricao || !data) {
-    mostrarMensagem('⚠️ Preencha todos os campos!', 'warning');
+  if (!dados?.jogos) {
+    area.innerHTML = `<p class="text-danger">Erro ao carregar jogos.</p>`;
     return;
   }
-  
-  etapa_atual = 2;
-  document.getElementById('etapa1').classList.remove('ativa');
-  document.getElementById('etapa2').classList.add('ativa');
-  
-  document.getElementById('progressBar').style.width = '50%';
-  document.getElementById('progressText').textContent = 'Etapa 2 de 2';
-  
-  document.getElementById('formTitulo').innerHTML = 
-    `<i class="bi bi-tag"></i> ${titulo} - Adicionar Preços`;
+
+  area.innerHTML = montarTabelaJogos(dados.jogos);
+}
+
+function montarTabelaJogos(lista) {
+  const linhas = lista.map(j => `
+    <tr>
+      <td>${j.id}</td>
+      <td>${j.titulo}</td>
+      <td>${j.genero}</td>
+      <td>${j.desenvolvedora}</td>
+      <td>${j.data_lancamento?.slice(0, 10) ?? "-"}</td>
+      <td>
+        <button class="btn btn-warning btn-sm" onclick="carregarParaEdicao(${j.id})">
+          <i class="bi bi-pencil"></i> Editar
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="confirmarDelete(${j.id})">
+          <i class="bi bi-trash"></i> Excluir
+        </button>
+      </td>
+    </tr>
+  `).join('');
+
+  return `
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th><th>Título</th><th>Gênero</th><th>Desenvolvedora</th><th>Lançamento</th><th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>${linhas}</tbody>
+    </table>
+  `;
+}
+
+// =========================
+// DELETAR
+// =========================
+
+async function confirmarDelete(id) {
+  if (!confirm("Tem certeza que deseja excluir este jogo?")) return;
+
+  const resposta = await deletarJogo(id);
+
+  alert(resposta?.mensagem ? "Jogo removido com sucesso!" : "Erro ao remover jogo.");
+
+  if (resposta?.mensagem) carregarJogos();
+}
+
+// =========================
+// ETAPAS
+// =========================
+
+function irParaEtapa2() {
+  const t = document.getElementById("inputTitulo").value.trim();
+  const d = document.getElementById("inputDesenvolvedora").value.trim();
+  const g = document.getElementById("inputGenero").value.trim();
+  const dt = document.getElementById("inputData").value;
+
+  if (!t || !d || !g || !dt) {
+    alert("Preencha todos os campos obrigatórios!");
+    return;
+  }
+
+  document.getElementById("etapa1").classList.remove("ativa");
+  document.getElementById("etapa2").classList.add("ativa");
+  atualizarProgresso(50, "Etapa 2 de 2");
 }
 
 function voltarParaEtapa1() {
-  console.log('⬅️ Voltando para etapa 1...');
-  
-  etapa_atual = 1;
-  document.getElementById('etapa2').classList.remove('ativa');
-  document.getElementById('etapa1').classList.add('ativa');
-  
-  document.getElementById('progressBar').style.width = '25%';
-  document.getElementById('progressText').textContent = 'Etapa 1 de 2';
-  
-  document.getElementById('formTitulo').innerHTML = 
-    '<i class="bi bi-plus-circle"></i> Criar Novo Jogo';
+  document.getElementById("etapa2").classList.remove("ativa");
+  document.getElementById("etapa1").classList.add("ativa");
+  atualizarProgresso(0, "Etapa 1 de 2");
 }
+
+function atualizarProgresso(perc, texto) {
+  document.getElementById("progressBar").style.width = perc + "%";
+  document.getElementById("progressText").innerText = texto;
+}
+
+// =========================
+// PREÇOS
+// =========================
 
 function adicionarPrecoTemporario() {
-  console.log('➕ Adicionando preço temporário...');
-  
-  const plataforma_id = document.getElementById('selectPlataforma').value;
-  const valor = document.getElementById('inputValor').value;
+  const plataforma = document.getElementById("selectPlataforma").value;
+  const valor = document.getElementById("inputValor").value;
 
-  // ✔️ validação
-  if (!plataforma_id || !valor) {
-    mostrarMensagem('⚠️ Preencha todos os campos!', 'warning');
+  if (!plataforma || !valor) {
+    alert("Preencha todos os campos de preço!");
     return;
   }
-  
-  const plataforma = plataformas_lista.find(p => p.id == plataforma_id);
-  
-  const preco_temp = {
-    id_temporario: Date.now(),
-    plataforma_id: parseInt(plataforma_id),
-    plataforma_nome: plataforma.nome,
-    valor: parseFloat(valor)
-  };
-  
-  precos_temporarios.push(preco_temp);
-  console.log(`✅ Preço adicionado temporariamente. Total: ${precos_temporarios.length}`);
-  
-  document.getElementById('selectPlataforma').value = '';
-  document.getElementById('inputValor').value = '';
-  
-  mostrarTabelaPrecoTemporarios();
+
+  precosTemporarios.push({ plataforma_id: plataforma, valor });
+  renderizarPrecos();
 }
 
-function mostrarTabelaPrecoTemporarios() {
-  console.log('📊 Mostrando preços temporários...');
-  
-  if (precos_temporarios.length === 0) {
-    document.getElementById('areaPrecos').innerHTML = `
-      <div class="alert alert-info">
-        <i class="bi bi-info-circle"></i> 
-        Nenhum preço adicionado ainda. Adicione pelo menos um para continuar.
-      </div>
-    `;
+function renderizarPrecos() {
+  const area = document.getElementById("areaPrecos");
+
+  if (precosTemporarios.length === 0) {
+    area.innerHTML = `<div class="alert alert-info">Nenhum preço adicionado ainda.</div>`;
     return;
   }
-  
-  const linhas = precos_temporarios.map((preco, index) => `
+
+  const linhas = precosTemporarios.map(item => `
     <tr>
-      <td>${preco.plataforma_nome}</td>
-      <td>R$ ${preco.valor.toFixed(2).replace('.', ',')}</td>
-      <td>
-        <button 
-          class="btn btn-sm btn-danger btn-acao" 
-          onclick="removerPrecoTemporario(${index})"
-        >
-          <i class="bi bi-trash"></i> Remover
-        </button>
-      </td>
+      <td>${item.plataforma_id}</td>
+      <td>${item.valor}</td>
     </tr>
   `).join('');
-  
-  const html = `
-    <div class="table-responsive">
-      <table class="table table-hover tabela-precos">
-        <thead class="table-dark">
-          <tr>
-            <th>Plataforma</th>
-            <th>Preço</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${linhas}
-        </tbody>
-      </table>
-    </div>
+
+  area.innerHTML = `
+    <table class="table table-sm table-bordered">
+      <thead class="table-secondary">
+        <tr><th>Plataforma</th><th>Preço (R$)</th></tr>
+      </thead>
+      <tbody>${linhas}</tbody>
+    </table>
   `;
-  
-  document.getElementById('areaPrecos').innerHTML = html;
 }
 
-function removerPrecoTemporario(index) {
-  console.log(`🗑 Removendo preço no índice ${index}...`);
-  
-  precos_temporarios.splice(index, 1);
-  mostrarTabelaPrecoTemporarios();
-}
+// =========================
+// SALVAR
+// =========================
 
 async function salvarJogoCompleto() {
-  console.log('💾 Salvando jogo completo...');
-  
-  if (precos_temporarios.length === 0) {
-    mostrarMensagem('⚠️ Adicione pelo menos um preço!', 'warning');
-    return;
-  }
-  
-  const titulo = document.getElementById('inputTitulo').value.trim();
-  const desenvolvedora = document.getElementById('inputDesenvolvedora').value.trim();
-  const genero = document.getElementById('inputGenero').value.trim();
-  const descricao = document.getElementById('inputDescricao').value.trim();
-  const data = document.getElementById('inputData').value;
-  
-  const dados_jogo = {
-    titulo: titulo,
-    desenvolvedora: desenvolvedora,
-    genero: genero,
-    descricao: descricao,
-    data_lancamento: data
+  const dados = {
+    titulo: document.getElementById("inputTitulo").value,
+    desenvolvedora: document.getElementById("inputDesenvolvedora").value,
+    genero: document.getElementById("inputGenero").value,
+    descricao: document.getElementById("inputDescricao").value,
+    data_lancamento: document.getElementById("inputData").value
   };
-  
-  try {
-    console.log('📤 Criando jogo...');
-    const resultado_jogo = await criarJogo(dados_jogo);
 
-    if (!resultado_jogo || !resultado_jogo.jogo) {
-      mostrarMensagem('❌ Erro ao criar jogo', 'danger');
+  try {
+    const resposta = modo_edicao && jogo_editando_id
+      ? await atualizarJogo(jogo_editando_id, dados)
+      : await criarJogo(dados);
+
+    if (!resposta?.jogo && !resposta?.mensagem) {
+      alert("Erro ao salvar jogo.");
       return;
     }
-    
-    const jogo_id = resultado_jogo.jogo.id;
-    console.log(`✅ Jogo criado com ID ${jogo_id}`);
-    
-    console.log('📤 Adicionando preços...');
-    
-    for (let preco_temp of precos_temporarios) {
-      const dados_preco = {
-        jogo_id: jogo_id,
-        plataforma_id: preco_temp.plataforma_id,
-        valor: preco_temp.valor
-      };
-      
-      console.log(`  ➕ Adicionando preço para ${preco_temp.plataforma_nome}...`);
-      await criarPreco(dados_preco);
+
+    // Corrige variável errada (jogoId não existia)
+    const jogoId = modo_edicao ? jogo_editando_id : resposta.jogo.id;
+
+    for (let preco of precosTemporarios) {
+      if (preco.id) {
+        await atualizarPreco(preco.id, { valor: preco.valor });
+      } else {
+        await criarPreco({
+          jogo_id: jogoId,
+          plataforma_id: preco.plataforma_id,
+          valor: preco.valor
+        });
+      }
     }
-    
-    mostrarMensagem('✅ Jogo e preços salvos com sucesso!', 'success');
-    
-    setTimeout(() => {
-      limparFormulario();
-      voltarParaEtapa1();
-      precos_temporarios = [];
-      carregarDados();
-    }, 2000);
-    
+
+    alert("✅ Jogo salvo com sucesso!");
+    window.location.reload();
+
   } catch (erro) {
     console.error('❌ Erro:', erro);
-    mostrarMensagem('❌ Erro ao salvar jogo', 'danger');
+    alert("❌ Erro ao salvar jogo");
   }
 }
 
-function mostrarTabelaJogos() {
-  console.log('📊 Mostrando tabela...');
-  
-  if (jogos_lista.length === 0) {
-    document.getElementById('areaTabela').innerHTML = 
-      '<div class="alert alert-info">Nenhum jogo cadastrado ainda</div>';
-    return;
-  }
-  
-  const linhas = jogos_lista.map(jogo => `
-    <tr>
-      <td>${jogo.id}</td>
-      
-      <td>
-        <strong>${jogo.titulo}</strong>
-        <br>
-        <small class="text-muted">${jogo.desenvolvedora}</small>
-      </td>
-      
-      <td>${jogo.genero}</td>
-      
-      <td>${formatarData(jogo.data_lancamento)}</td>
-      
-      <td>
-        <button 
-          class="btn btn-sm btn-warning btn-acao" 
-          onclick="editarJogo(${jogo.id})"
-        >
-          <i class="bi bi-pencil"></i> Editar
-        </button>
-        
-        <button 
-          class="btn btn-sm btn-danger btn-acao" 
-          onclick="confirmarDelecao(${jogo.id})"
-        >
-          <i class="bi bi-trash"></i> Deletar
-        </button>
-      </td>
-    </tr>
-  `).join('');
-  
-  const html = `
-    <div class="table-responsive">
-      <table class="table table-hover tabela-precos">
-        <thead class="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Jogo</th>
-            <th>Gênero</th>
-            <th>Lançamento</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${linhas}
-        </tbody>
-      </table>
-    </div>
-  `;
-  
-  document.getElementById('areaTabela').innerHTML = html;
-}
+// =========================
+// INICIALIZAÇÃO
+// =========================
 
-function editarJogo(jogo_id) {
-  console.log(`✏️ Editando jogo ${jogo_id}...`);
-  
-  const jogo = jogos_lista.find(j => j.id === jogo_id);
-  
-  if (!jogo) {
-    alert('Jogo não encontrado');
-    return;
-  }
-  
-  document.getElementById('inputJogoId').value = jogo.id;
-  document.getElementById('inputTitulo').value = jogo.titulo;
-  document.getElementById('inputDesenvolvedora').value = jogo.desenvolvedora;
-  document.getElementById('inputGenero').value = jogo.genero;
-  document.getElementById('inputDescricao').value = jogo.descricao;
-  document.getElementById('inputData').value = jogo.data_lancamento;
-  
-  etapa_atual = 1;
-  document.getElementById('etapa1').classList.add('ativa');
-  document.getElementById('etapa2').classList.remove('ativa');
-  
-  document.getElementById('formTitulo').innerHTML = 
-    `<i class="bi bi-pencil-square"></i> Editando: ${jogo.titulo}`;
-  
-  document.getElementById('progressBar').style.width = '25%';
-  document.getElementById('progressText').textContent = 'Etapa 1 de 2';
-  
-  precos_temporarios = [];
-  
-  document.querySelector('#formTitulo').scrollIntoView({ behavior: 'smooth' });
-}
+window.onload = async () => {
+  await carregarJogos();
+  const select = document.getElementById("selectPlataforma");
+  const dados = await listarPlataformas();
 
-function confirmarDelecao(jogo_id) {
-  console.log(`🗑 Confirmando deleção de ${jogo_id}...`);
-  
-  if (confirm('⚠️ Tem certeza que quer deletar este jogo?')) {
-    deletarJogoConfirmado(jogo_id);
-  }
-}
-
-async function deletarJogoConfirmado(jogo_id) {
-  console.log(`🗑 Deletando jogo ${jogo_id}...`);
-  
-  try {
-    const resultado = await deletarJogo(jogo_id);
-    
-    if (resultado) {
-      alert('✅ Jogo deletado com sucesso!');
-      await carregarDados();
-    }
-    
-  } catch (erro) {
-    console.error('❌ Erro:', erro);
-    alert('Erro ao deletar jogo');
-  }
-}
-
-function limparFormulario() {
-  document.getElementById('inputJogoId').value = '';
-  document.getElementById('inputTitulo').value = '';
-  document.getElementById('inputDesenvolvedora').value = '';
-  document.getElementById('inputGenero').value = '';
-  document.getElementById('inputDescricao').value = '';
-  document.getElementById('inputData').value = '';
-  document.getElementById('selectPlataforma').value = '';
-  document.getElementById('inputValor').value = '';
-  document.getElementById('mensagemForm').innerHTML = '';
-  
-  precos_temporarios = [];
-  
-  document.getElementById('areaPrecos').innerHTML = `
-    <div class="alert alert-info">
-      <i class="bi bi-info-circle"></i> 
-      Nenhum preço adicionado ainda. Adicione pelo menos um para continuar.
-    </div>
-  `;
-}
-
-function mostrarMensagem(texto, tipo) {
-  const html = `
-    <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-      ${texto}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-  `;
-  
-  document.getElementById('mensagemForm').innerHTML = html;
-  
-  setTimeout(() => {
-    document.getElementById('mensagemForm').innerHTML = '';
-  }, 5000);
-}
-
-function formatarData(data) {
-  if (!data) return '-';
-  const [ano, mes, dia] = data.split('-');
-  return `${dia}/${mes}/${ano}`;
-}
+  dados?.plataformas?.forEach(p => {
+    select.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
+  });
+};

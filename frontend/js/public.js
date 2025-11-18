@@ -1,4 +1,4 @@
-/* UBLIC.JS — Lógica da página pública do SaveMe */
+/* PUBLIC.JS — Lógica da página pública do SaveMe */
 
 // Estado global da página
 let jogos_encontrados = [];
