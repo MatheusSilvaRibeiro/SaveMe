@@ -1,2 +1,5 @@
 .env
-/node_modeules/
+.env.*
+!.env.example
+node_modules/
+dist/
